@@ -9,11 +9,27 @@
     <style>
       /*Loads Playfair Display SC font*/
       @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC&display=swap');
-      body{
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+      @keyframes rot{
+        from{
+          -webkit-transform:rotateZ(0rad);
+        }25%{
+          -webkit-transform:rotateZ(1.57079633rad)
+        }50%{
+          -webkit-transform:rotateZ(3.14159265rad)
+        }75%{
+          -webkit-transform:rotateZ(4.71238898rad)
+        }to{
+          -webkit-transform:rotateZ(6.28318531rad);
+        }
+      }body{
         font-size:1.5em;
+        font-family:"Playfair Display", fantasy;
       }h1{
         font-size:50px;
-        /*font-family:"Playfair Display SC", fantasy;*/
+        font-family:"Playfair Display SC", fantasy;
+        text-align:center;
+      }h2, heading{
         text-align:center;
       }p{
         margin-bottom:0px;
@@ -26,17 +42,29 @@
         transition:background-color,color;
         transition-duration:1.5s;
         font-size:15px;
+        font-family:"Playfair Display", fantasy;
       }button:hover{
         cursor:pointer;
         background-color:white;
         color:black;
+      }pre{
+        font-size:15px;
+        background-color:rgba(150,150,150,0.3);
+        padding:20px;
+        padding-left:50px;
+        padding-right:50px;
+        white-space:pre-wrap;
+        margin:30px;
+      }th, td{
+        width:1%;
+        overflow-x:hidden;
       }.main{
         position:absolute;
         top:10%;
         left:0px;
         width:100%;
         height:90%;
-        background-color:rgba(255,255,255,0.5);
+        background-color:rgba(255,255,255,0.7);
         overflow-y:auto;
       }.back{
         position:fixed;
@@ -44,15 +72,60 @@
         width:100%;
         top:10%;
         left:0px;
+      }.selected{
+        color:black;
+        background-color:white;
+      }.blueSK{
+        font-family:"Playfair Display SC", fantasy;
+        color:white;
+        font-size:35px;
+        margin:10px;
       }#login{
+        visibility:hidden;
         text-align:center;
         font-family:"Playfair Display SC", fantasy;
       }#login button{
         font-family:"Playfair Display SC", fantasy;
+      }#loading{
+        z-index:1;
+        position:fixed;
+        left:41%;
+        top:200px;
+        width:200px;
+        height:200px;
+        border-radius:250px;
+        border:15px dotted grey;
+        animation:rot 4s infinite;
+        visibility:hidden;
+      }#home{
+        visibility:hidden;
+      }#home p, #home ul{
+        margin-left:100px;
+        margin-right:100px;
+        text-indent:40px;
+        text-align:justify;
+        margin-top:0px;
+      }#grade{
+        text-align:center
+      }#nav{
+        position:fixed;
+        top:0px;
+        left:0px;
+        width:100%;
+        height:10%;
+        background-color:rgb(0, 0, 255);
+        text-align:center;
       }
     </style>
   </head>
   <body>
+    <section id="nav">
+      <span class = "blueSK">Score Keeper</span>
+      <button class="topB">Home</button>
+      <button class="topB selected">Grade</button>
+      <button class="topB">View Data</button>
+      <button class="topB">Print Data</button>
+    </section>
     <section id="login">
       <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back" style="top:0px"/>
       <div class="main" style="top:0px;height:100%">
@@ -69,10 +142,262 @@
         <button>Sign Up</button>
       </div>
     </section>
+    <section id="home">
+      <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back"/>
+      <div class="main">
+      <h1>Score Keeper</h1>
+      <h2>About</h2>
+      <p>Score Keeper is a HTML project which uses a JSON script to store and manipulate information to help score entries in small competitions. This tool will allow judges to converse, grade, and print the results as a HTML/JS table.</p>
+      <p>So how does this work? On the client side (front end), you see this webpage right here. This was made from HTML, CSS, and JavaScript. However, the JavaScript serves two purposes. Instead of just animating this webpage and making it interactive, it also serves as an interface between the client side code and the server side information.</p>
+      <p>What is JSON? JSON stands for JavaScript Object Notation. JSON is a simple way to store information on the cloud. It is easy to read in JavaScript, because all of the information is written as a JavaScript object. Here is an example of a JSON script below:</p>
+      <pre>{
+  "name" : "KY",
+  "energyPoints" : 126640,
+  "projects" : [
+    {
+      "name" : "3d platformer",
+      "votes" : 347
+    },
+    {
+      "name" : "Infinite Chocolate Illusion",
+      "votes" : 179
+    }
+  ]
+}     </pre>
+      <p>You can learn more about JSON <a href="https://www.w3schools.com/js/js_json_intro.asp">here</a>.</p>
+      <p>So with the code aside, what are the pros and cons of this tool?</p>
+      <h2>Pros (Note: some functionalities not yet implemented)</h2>
+      <ul>
+        <li>Well Organized</li>
+        <li>Easy to use</li>
+        <li>See updates from others within 30 seconds</li>
+        <li>Print your data as a HTML/JS table</li>
+        <li>Flexible: You know who has the source code... Just ask him to make updates you want!</li>
+      </ul>
+      <h2>Cons</h2>
+      <ul>
+        <li>Not well-tested: bugs are possible</li>
+        <li>Constant upgrades may temporarily break some functionalities</li>
+        <li>Little Security: Who wants to hack a site made for kids? Hopefully, no one, but if anyone does want to hack, it is going to be <b>so easy</b> to manipulate the data and possibly delete it, which is impossible to bring back. Luckily, it is possible to save backup files manually, and store code elsewhere, but that doesn't count as security.</li>
+        <li>Doesn't allow special characters, white spaces, or periods in stored information. Notice how I ruined all the competitor's names?</li>
+      </ul>
+      </div>
+    </section>
+    <section id="grade">
+      <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back"/>
+      <div class="main">
+        <h1>Grade</h1>
+        <button class="teamB">Nommers</button>
+        <button class="teamB">Luponct</button>
+        <button class="teamB">Amethyst</button>
+        <button class="teamB">Mulis</button>
+        <button class="teamB">Foxlaine</button>
+        <button class="teamB">Turtell</button>
+        <br/><br/>
+        <button class="judgeB">FlowerPetals</button>
+        <button class="judgeB">SamGraz</button>
+        <button class="judgeB">LittleWhinging</button>
+        <button class="judgeB">Zusha</button>
+        <button class="judgeB">Twilight</button>
+        <button class="judgeB">Jjmn06</button>
+        <button class="judgeB">Atomic</button>
+        <button class="judgeB">Panth3r</button>
+        <button class="judgeB">Chase</button>
+        <button class="judgeB">KY</button>
+        <table id="write"></table>
+      </div>
+    </section>
+    <section id = "loading"></section>
     <script>
+      let loading = document.getElementById("loading");
+      let write = document.getElementById("write");
+      let teamButtons = document.getElementsByClassName("teamB");
+      let judgeButtons = document.getElementsByClassName("judgeB");
       let cxml = 0;
       let xmljob = 0;
       let data = {};
+      let stopInteractions = 0;
+      let selectedTeam = null;
+      let selectedJudge = null;
+      let judges = [
+        "FlowerPetals",
+        "SamGraz",
+        "LittleWhinging",
+        "Zusha",
+        "Twilight",
+        "Jjmn06",
+        "Atomic",
+        "Panth3r",
+        "Chase",
+        "KY"
+      ];
+      let teams = [
+        "Nommers",
+        "Luponct",
+        "Amethyst",
+        "Mulis",
+        "Foxlaine",
+        "Turtell"
+      ];
+      let members = {
+        Nommers : [
+          "hyunjinsong5",
+          "LeaferStudios",
+          "mastermind",
+          "BrokenRadio",
+          "lazerLegend",
+          "Bronte",
+          "knightRider",
+          "ThePhantomNinja",
+          "totoroIsMyNeighbour",
+          "Cosmic",
+          "WebincNet",
+          "BlankBird",
+          "HarryPotter",
+          "ThePromisedCoder",
+          "PharaildisCalc",
+          "CodeEngineer",
+          "CupCake",
+          "LOL"
+        ],
+        Amethyst : [
+          "TriumvirateCoding",
+          "candyStudios",
+          "Sac06",
+          "ShadowCat",
+          "superNova",
+          "diamondDarkheart",
+          "Anaak",
+          "BlackKnight",
+          "AriannaGear",
+          "shadowProgramming",
+          "theNoSockGuy",
+          "draconyx",
+          "IbraheemAhmed",
+          "MarioX",
+          "IAmACoderPerson",
+          "EggcelentProjects",
+          "marvel456",
+          "heal01",
+          "Legolordoftherings"
+        ],
+        Turtell : [
+          "Aleena",
+          "jonahRB",
+          "Phoenix",
+          "Pxide",
+          "Samwise",
+          "SuperLuigi",
+          "VortexNinja",
+          "vexcess",
+          "TheMoneyLord",
+          "Astride",
+          "HexilzAlpha",
+          "CadeMats",
+          "DC29",
+          "RayTheEshay",
+          "harrypotter",
+          "WolfBrother",
+          "MoonLightStudios",
+          "ElectricStudios"
+        ],
+        Mulis : [
+          "timoTime12",
+          "PlatinumProgramming",
+          "InfinityStudios",
+          "Wisest",
+          "Yoda",
+          "aProgrammer",
+          "newNinja",
+          "Maverick",
+          "multiverse",
+          "fadeAway",
+          "fireHawk360",
+          "Tator",
+          "ZeRedBarron",
+          "Michael",
+          "moon",
+          "WinstonLeaferKing",
+          "theMandalorian"
+        ],
+        Luponct : [
+          "ColdCutz",
+          "StuffyNose",
+          "GuitarMaster06",
+          "jsCoder",
+          "LavaBucketFoxProgramming",
+          "NeonByte",
+          "Voldemort",
+          "RakeNightfur",
+          "AFpants",
+          "CodeXRed",
+          "IronMan",
+          "DinosaurStudios",
+          "CowboysFan232",
+          "SamfectEnterprises",
+          "OmarH",
+          "xtreme",
+          "JSSTheHistorian",
+          "I82Cookies",
+          "FireballStudios"
+        ],
+        Foxlaine : [
+          "PinkQueenAbigail",
+          "Radiantferret",
+          "TheCatGirl",
+          "wonderWoman",
+          "EragonBlaze",
+          "red",
+          "Fennex",
+          "JP",
+          "ElectricalProgrammer",
+          "Hydra",
+          "iceToMeetYou",
+          "StudiousArgyle",
+          "Timothy",
+          "AgentReviews",
+          "AEClemans",
+          "xDiamondKhightx",
+          "Grace"
+        ]
+      };
+      function membersTojson(){
+        let workingData = {};
+        for(let i=0; i<teams.length; i++){
+          workingData[teams[i]] = {};
+          var move = members[teams[i]];
+          for(let num=0; num<move.length; num++){
+            workingData[teams[i]][move[num]] = {
+              name : "",
+              link : "",
+              a : 0,
+              b : 0,
+              c : 0,
+              d : 0,
+              e : 0,
+            };
+          }
+        }
+        return workingData;
+      }
+      function toMasterData(){
+        let masterData = {};
+        let partialData = membersTojson();
+        for(let i=0; i<judges.length; i++){
+          masterData[judges[i]] = partialData;
+        }
+        return masterData;
+      }
+      let gradeData = toMasterData();
+      function toggleLoad(whichway){
+        if(whichway){
+          stopInteractions = 1;
+          loading.style.visibility = "visible";
+        }else{
+          stopInteractions = 0;
+          loading.style.visibility = "hidden";
+        }
+      }
       //For accessing the JSON information
       let source = "5fae1ef9ea9b612e1c672795";
       let code = "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku";
@@ -85,6 +410,9 @@
           if(xmljob == 0){
             data = JSON.parse(req.responseText);
             checkP2();
+          }else if(xmljob == 1){
+            data = JSON.parse(req.responseText);
+            makeWriteTable2();
           }
         }
       };
@@ -98,11 +426,8 @@
           req.send();
           cxml = 1;
           xmljob = 0;
+          toggleLoad(1);
         }
-        // req.open("PUT", "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795", true);
-        // req.setRequestHeader("Content-Type", "application/json");
-        // req.setRequestHeader("secret-key", "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku");
-        // req.send('{"u": ["ProgrammingTrials"],"o":["NoMoreMemes"]}');
       }
       function checkP2(){
         if("u" in data){
@@ -115,16 +440,80 @@
         }else{
           window.alert("Something went wrong. Please try again.");
         }
+        toggleLoad(0);
       }
-      document.body.addEventListener("click", function(event){
-        let trgt = event.target;
-        if(trgt.tagName.toLowerCase() == "button"){
-          if(trgt.innerText == "Sign Up"){
-            notYetAvailable();
-          }else if(trgt.innerText == "Login"){
-            checkP1();
+      function makeWriteTable1(){
+        if(selectedTeam && selectedJudge){
+          if(!cxml){
+            req.open("GET", "https://api.jsonbin.io/b/"+source+"/latest", true);
+            req.setRequestHeader("secret-key", code);
+            req.send();
+            cxml = 1;
+            xmljob = 1;
+            toggleLoad(1);
+          }else{
+            window.setTimeout(makeWriteTable1, 100);
           }
         }
+      }
+      function makeWriteTable2(){
+        write.innerHTML = `
+          <tr>
+            <td colspan = "3">Team: ${selectedTeam}</td>
+            <td colspan = "6">Judge: ${selectedJudge}</td>
+          </tr>
+          <tr>
+            <th>Person</th>
+            <th>Name</th>
+            <th>Link</th>
+            <th>A</th>
+            <th>B</th>
+            <th>C</th>
+            <th>D</th>
+            <th>E</th>
+            <th>Overall</th>
+          </tr>
+        `;
+        toggleLoad(0);
+      }
+      document.body.addEventListener("click", function(event){
+        if(!stopInteractions){
+          let trgt = event.target;
+          if(trgt.tagName.toLowerCase() == "button"){
+            if(trgt.innerText == "Sign Up"){
+              notYetAvailable();
+            }else if(trgt.innerText == "Login"){
+              checkP1();
+            }else if(trgt.className === "teamB"){
+              for(let i=0;i<teamButtons.length;i++){
+                teamButtons[i].className = "teamB";
+              }
+              trgt.className = "teamB selected";
+              selectedTeam = trgt.innerText;
+              makeWriteTable1();
+            }else if(trgt.className === "judgeB"){
+              for(let i=0;i<judgeButtons.length;i++){
+                judgeButtons[i].className = "judgeB";
+              }
+              trgt.className = "judgeB selected";
+              selectedJudge = trgt.innerText;
+              makeWriteTable1();
+            }
+          }
+        }
+      });
+      document.body.addEventListener("keyup",function(event){
+        let message = {
+          u : ["ProgrammingTrials"],
+          o : ["noMoreMemes"],
+          projects : [
+            gradeData
+          ]
+        };
+        req.open("PUT", "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795", true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.setRequestHeader("secret-key", "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku");
+        req.send(JSON.stringify(message));
       });
     </script>
   </body>
