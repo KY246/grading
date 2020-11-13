@@ -70,21 +70,59 @@
       </div>
     </section>
     <script>
-      let source = "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795";
+      let cxml = 0;
+      let xmljob = 0;
+      let data = {};
+      //For accessing the JSON information
+      let source = "5fae1ef9ea9b612e1c672795";
       let code = "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku";
+      //Don't ask me what XML is: I copied some of this code.
+      let req = new XMLHttpRequest();
+      req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) {
+          window.alert(req.responseText);
+          cxml = 0;
+          if(xmljob == 0){
+            data = JSON.parse(req.responseText);
+            checkP2();
+          }
+        }
+      };
       function notYetAvailable(){
-        window.alert("Sorry, this functionality is not yet complete. If you want to use it, please bug KY to do it. If you don't, it might never get done.");
+        window.alert("Sorry, this functionality is not yet complete. If you want to use it, please bug KY to finish it. If you don't, it might never get done.");
       }
-      function check(){
-        window.alert("tehe");
+      function checkP1(){
+        if(!cxml){
+          req.open("GET", "https://api.jsonbin.io/b/"+source+"/latest", true);
+          req.setRequestHeader("secret-key", code);
+          req.send();
+          cxml = 1;
+          xmljob = 0;
+        }
+        // req.open("PUT", "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795", true);
+        // req.setRequestHeader("Content-Type", "application/json");
+        // req.setRequestHeader("secret-key", "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku");
+        // req.send('{"u": ["ProgrammingTrials"],"o":["NoMoreMemes"]}');
+      }
+      function checkP2(){
+        if("u" in data){
+          let logInInputs = [document.getElementById("user").innerHTML.toLowerCase(),document.getElementById("pass").innerHTML.toLowerCase()];
+          if(data.u.indexOf(logInInputs[0]) == data.o.indexOf(logInInputs[1]) && data.o.indexOf(logInInputs[0]) != -1){
+            window.alert("success!")
+          }else{
+            window.alert("fail!" + logInInputs.toString());
+          }
+        }else{
+          window.alert("Something went wrong. Please try again.");
+        }
       }
       document.body.addEventListener("click", function(event){
         let trgt = event.target;
-        if(trgt.tagName.toLowerCase(); == "button"){
+        if(trgt.tagName.toLowerCase() == "button"){
           if(trgt.innerText == "Sign Up"){
             notYetAvailable();
           }else if(trgt.innerText == "Login"){
-            check();
+            checkP1();
           }
         }
       });
