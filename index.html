@@ -106,11 +106,11 @@
       }
       function checkP2(){
         if("u" in data){
-          let logInInputs = [document.getElementById("user").innerHTML.toLowerCase(),document.getElementById("pass").innerHTML.toLowerCase()];
-          if(data.u.indexOf(logInInputs[0]) == data.o.indexOf(logInInputs[1]) && data.o.indexOf(logInInputs[0]) != -1){
+          let logInInputs = [document.getElementById("user").value.toLowerCase(),document.getElementById("pass").value.toLowerCase()];
+          if(data.u.indexOf(logInInputs[0]) == data.o.indexOf(logInInputs[1]) && data.u.indexOf(logInInputs[0]) != -1){
             window.alert("success!")
           }else{
-            window.alert("fail!" + logInInputs.toString());
+            window.alert("Ýour username and password don\'t match.");
           }
         }else{
           window.alert("Something went wrong. Please try again.");
