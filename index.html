@@ -7,15 +7,59 @@
     <link rel="icon" href="https://www.khanacademy.org/computer-programming/logo-history/5723554329739264/5021141755052032.png" type="image/jpg" sizes="16x16">
     <!--   Guess I'll never get used to the traditional way. Thaaanks Khan Academy.   -->
     <style>
-      
+      /*Loads Playfair Display SC font*/
+      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display+SC&display=swap');
+      body{
+        font-size:1.5em;
+      }h1{
+        font-size:50px;
+        font-family:"Playfair Display SC", fantasy;
+        text-align:center;
+      }button{
+        padding:10px;
+        border-radius:10px;
+        background-color:rgb(0, 0, 255);
+        border:1px solid black;
+        color:white;
+        transition:background-color,color;
+        transition-duration:1.5s;
+      }button:hover{
+        cursor:pointer;
+        background-color:white;
+        color:black;
+      }.main{
+        position:absolute;
+        top:10%;
+        left:0px;
+        width:100%;
+        height:90%;
+        background-color:rgba(255,255,255,0.5);
+      }.back{
+        position:fixed;
+        z-index:-1;
+        width:100%;
+        top:10%;
+        left:0px;
+      }#login{
+        text-align:center;
+      }
     </style>
   </head>
   <body>
-    <h1>Score Keeper</h1>
-    <p>Username</p>
-    <input type="text" id="user"></input>
-    <p>Password</p>
-    <input type="password" id="pass"></input>
+    <section id="login">
+      <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back" style="top:0px"/>
+      <div class="main" style="top:0px;height:100%">
+        <h1>Score Keeper</h1>
+        <p>Username</p>
+        <input type="text" id="user"/>
+        <br/>
+        <p>Password</p>
+        <input type="password" id="pass"/>
+        <br/><br/>
+        <p>Don't have an account yet?</p>
+        <button>Sign Up</button>
+      </div>
+    </section>
     <script>
       
     </script>
