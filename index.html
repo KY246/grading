@@ -13,8 +13,10 @@
         font-size:1.5em;
       }h1{
         font-size:50px;
-        font-family:"Playfair Display SC", fantasy;
+        /*font-family:"Playfair Display SC", fantasy;*/
         text-align:center;
+      }p{
+        margin-bottom:0px;
       }button{
         padding:10px;
         border-radius:10px;
@@ -23,6 +25,7 @@
         color:white;
         transition:background-color,color;
         transition-duration:1.5s;
+        font-size:15px;
       }button:hover{
         cursor:pointer;
         background-color:white;
@@ -34,6 +37,7 @@
         width:100%;
         height:90%;
         background-color:rgba(255,255,255,0.5);
+        overflow-y:auto;
       }.back{
         position:fixed;
         z-index:-1;
@@ -42,6 +46,9 @@
         left:0px;
       }#login{
         text-align:center;
+        font-family:"Playfair Display SC", fantasy;
+      }#login button{
+        font-family:"Playfair Display SC", fantasy;
       }
     </style>
   </head>
@@ -56,12 +63,31 @@
         <p>Password</p>
         <input type="password" id="pass"/>
         <br/><br/>
-        <p>Don't have an account yet?</p>
+        <button>Login</button>
+        <br/><br/>
+        <p style="font-family:serif;">Don't have an account yet?</p>
         <button>Sign Up</button>
       </div>
     </section>
     <script>
-      
+      let source = "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795";
+      let code = "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku";
+      function notYetAvailable(){
+        window.alert("Sorry, this functionality is not yet complete. If you want to use it, please bug KY to do it. If you don't, it might never get done.");
+      }
+      function check(){
+        window.alert("tehe");
+      }
+      document.body.addEventListener("click", function(event){
+        let trgt = event.target;
+        if(trgt.tagName.toLowerCase(); == "button"){
+          if(trgt.innerText == "Sign Up"){
+            notYetAvailable();
+          }else if(trgt.innerText == "Login"){
+            check();
+          }
+        }
+      });
     </script>
   </body>
 </html>
