@@ -55,9 +55,11 @@
         padding-right:50px;
         white-space:pre-wrap;
         margin:30px;
-      }th, td{
-        width:1%;
-        overflow-x:hidden;
+      }th{
+        width:10%;
+      }td{
+        padding-top:20px;
+        border-top:1px solid black;
       }.main{
         position:absolute;
         top:10%;
@@ -97,15 +99,15 @@
         border:15px dotted grey;
         animation:rot 4s infinite;
         visibility:hidden;
-      }#home{
+      }#Home{
         visibility:hidden;
-      }#home p, #home ul{
+      }#Home p, #Home ul{
         margin-left:100px;
         margin-right:100px;
         text-indent:40px;
         text-align:justify;
         margin-top:0px;
-      }#grade{
+      }#Grade{
         text-align:center
       }#nav{
         position:fixed;
@@ -142,7 +144,7 @@
         <button>Sign Up</button>
       </div>
     </section>
-    <section id="home">
+    <section id="Home">
       <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back"/>
       <div class="main">
       <h1>Score Keeper</h1>
@@ -183,7 +185,7 @@
       </ul>
       </div>
     </section>
-    <section id="grade">
+    <section id="Grade">
       <img src="https://oia.arizona.edu/sites/default/files/inline-images/scantron.jpg" class="back"/>
       <div class="main">
         <h1>Grade</h1>
@@ -204,7 +206,10 @@
         <button class="judgeB">Panth3r</button>
         <button class="judgeB">Chase</button>
         <button class="judgeB">KY</button>
+        <br/><br/>
         <table id="write"></table>
+        <br/>
+        <button id="save" style="font-family:'Playfair Display SC', fantasy;font-size:20px;visibility:hidden;">Save Changes</button>
       </div>
     </section>
     <section id = "loading"></section>
@@ -213,12 +218,15 @@
       let write = document.getElementById("write");
       let teamButtons = document.getElementsByClassName("teamB");
       let judgeButtons = document.getElementsByClassName("judgeB");
+      let saveB = document.getElementById("save");
       let cxml = 0;
       let xmljob = 0;
       let data = {};
       let stopInteractions = 0;
       let selectedTeam = null;
       let selectedJudge = null;
+      let edited = 0;
+      let sendData = {};
       let judges = [
         "FlowerPetals",
         "SamGraz",
@@ -361,6 +369,8 @@
           "Grace"
         ]
       };
+      /*
+      //This was the set-up to initially create the JSON file.
       function membersTojson(){
         let workingData = {};
         for(let i=0; i<teams.length; i++){
@@ -368,13 +378,13 @@
           var move = members[teams[i]];
           for(let num=0; num<move.length; num++){
             workingData[teams[i]][move[num]] = {
-              name : "",
-              link : "",
-              a : 0,
-              b : 0,
-              c : 0,
-              d : 0,
-              e : 0,
+              name : "—",
+              link : "—",
+              a : "—",
+              b : "—",
+              c : "—",
+              d : "—",
+              e : "—",
             };
           }
         }
@@ -389,6 +399,7 @@
         return masterData;
       }
       let gradeData = toMasterData();
+      */
       function toggleLoad(whichway){
         if(whichway){
           stopInteractions = 1;
@@ -405,7 +416,7 @@
       let req = new XMLHttpRequest();
       req.onreadystatechange = () => {
         if (req.readyState == XMLHttpRequest.DONE) {
-          window.alert(req.responseText);
+          //console.log(req.responseText);
           cxml = 0;
           if(xmljob == 0){
             data = JSON.parse(req.responseText);
@@ -413,9 +424,27 @@
           }else if(xmljob == 1){
             data = JSON.parse(req.responseText);
             makeWriteTable2();
+          }else if(xmljob == 2){
+            data = JSON.parse(req.responseText);
+            save2();
+          }else if(xmljob == 3){
+            setTimeout(save3, 1000);
+          }else if(xmljob == 4){
+            data = JSON.parse(req.responseText);
+            save4();
           }
         }
       };
+      function scene(where){
+        
+      }
+      function de(value){
+        if(+value){
+          return +value;
+        }else{
+          return 0;
+        }
+      }
       function notYetAvailable(){
         window.alert("Sorry, this functionality is not yet complete. If you want to use it, please bug KY to finish it. If you don't, it might never get done.");
       }
@@ -457,10 +486,28 @@
         }
       }
       function makeWriteTable2(){
+        let temp = ``;
+        let selectedTeamData = members[selectedTeam];
+        for(let i=0;i<selectedTeamData.length;i++){
+          let tempData = data.projects[0][selectedJudge][selectedTeam][selectedTeamData[i]];
+          temp += `
+            <tr>
+              <td>${selectedTeamData[i]}</td>
+              <td contenteditable=\"true\">${tempData.name}</td>
+              <td contenteditable=\"true\">${tempData.link}</td>
+              <td contenteditable=\"true\">${tempData.a}</td>
+              <td contenteditable=\"true\">${tempData.b}</td>
+              <td contenteditable=\"true\">${tempData.c}</td>
+              <td contenteditable=\"true\">${tempData.d}</td>
+              <td contenteditable=\"true\">${tempData.e}</td>
+              <td>${(de(tempData.a)+de(tempData.b)+de(tempData.c)+de(tempData.d)+de(tempData.e))/5}</td>
+            </tr>
+          `;
+        }
         write.innerHTML = `
           <tr>
-            <td colspan = "3">Team: ${selectedTeam}</td>
-            <td colspan = "6">Judge: ${selectedJudge}</td>
+            <th colspan = \"3\">Team: ${selectedTeam}</th>
+            <th colspan = \"6\">Judge: ${selectedJudge}</th>
           </tr>
           <tr>
             <th>Person</th>
@@ -473,7 +520,99 @@
             <th>E</th>
             <th>Overall</th>
           </tr>
+          ${temp}
         `;
+        toggleLoad(0);
+        saveB.style.visibility="visible";
+      }
+      function save1(){
+        if(!cxml){
+          sendData = {};
+          let rows = write.children[0].children;
+          for(let i=2;i<rows.length;i++){
+            let row = rows[i].children;
+            sendData[row[0].innerText] = {
+              name:row[1].innerText,
+              link:row[2].innerText,
+              a:row[3].innerText,
+              b:row[4].innerText,
+              c:row[5].innerText,
+              d:row[6].innerText,
+              e:row[7].innerText
+            };
+          }
+          req.open("GET", "https://api.jsonbin.io/b/"+source+"/latest", true);
+          req.setRequestHeader("secret-key", code);
+          req.send();
+          cxml = 1;
+          xmljob = 2;
+          toggleLoad(1);
+        }else{
+          window.setTimeout(save1, 100);
+        }
+      }
+      function save2(){
+        let nowSending = data;
+        nowSending.projects[0][selectedJudge][selectedTeam] = sendData;
+        req.open("PUT", "https://api.jsonbin.io/b/"+source, true);
+        req.setRequestHeader("Content-Type", "application/json");
+        req.setRequestHeader("secret-key", code);
+        req.send(JSON.stringify(nowSending));
+        cxml = 1;
+        xmljob = 3;
+      }
+      function save3(){
+        window.alert("Request Sent.\nClick to begin checking success.");
+        req.open("GET", "https://api.jsonbin.io/b/"+source+"/latest", true);
+        req.setRequestHeader("secret-key", code);
+        req.send();
+        axml = 0;
+        xmljob = 4;
+      }
+      function save4(){
+        let tab = window.open();
+        let temp = ``;
+        let selectedTeamData = members[selectedTeam];
+        for(let i=0;i<selectedTeamData.length;i++){
+          let tempData = data.projects[0][selectedJudge][selectedTeam][selectedTeamData[i]];
+          temp += `
+            <tr>
+              <td>${selectedTeamData[i]}</td>
+              <td>${tempData.name}</td>
+              <td>${tempData.link}</td>
+              <td>${tempData.a}</td>
+              <td>${tempData.b}</td>
+              <td>${tempData.c}</td>
+              <td>${tempData.d}</td>
+              <td>${tempData.e}</td>
+              <td>${(de(tempData.a)+de(tempData.b)+de(tempData.c)+de(tempData.d)+de(tempData.e))/5}</td>
+            </tr>
+          `;
+          edited = 0;
+        }
+        let finalCheckText = `
+          <h1>Is This The Edited Information?</h1>
+          <h2>If not, please try saving again.</h2>
+          <table>
+            <tr>
+              <th colspan = \"3\">Team: ${selectedTeam}</th>
+              <th colspan = \"6\">Judge: ${selectedJudge}</th>
+            </tr>
+            <tr>
+              <th>Person</th>
+              <th>Name</th>
+              <th>Link</th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+              <th>E</th>
+              <th>Overall</th>
+            </tr>
+            ${temp}
+          </table>
+        `;
+        tab.document.write(finalCheckText);
         toggleLoad(0);
       }
       document.body.addEventListener("click", function(event){
@@ -484,24 +623,44 @@
               notYetAvailable();
             }else if(trgt.innerText == "Login"){
               checkP1();
-            }else if(trgt.className === "teamB"){
-              for(let i=0;i<teamButtons.length;i++){
-                teamButtons[i].className = "teamB";
+            }else if(trgt.className == "teamB"){
+              let contnu;
+              if(edited){
+                contnu = confirm("Changes you made may not be saved.");
               }
-              trgt.className = "teamB selected";
-              selectedTeam = trgt.innerText;
-              makeWriteTable1();
-            }else if(trgt.className === "judgeB"){
-              for(let i=0;i<judgeButtons.length;i++){
-                judgeButtons[i].className = "judgeB";
+              if(!edited || contnu){
+                edited = 0;
+                for(let i=0;i<teamButtons.length;i++){
+                  teamButtons[i].className = "teamB";
+                }
+                trgt.className = "teamB selected";
+                selectedTeam = trgt.innerText;
+                makeWriteTable1();
+                write.innerHTML = "";
+                saveB.style.visibility="hidden";
               }
-              trgt.className = "judgeB selected";
-              selectedJudge = trgt.innerText;
-              makeWriteTable1();
+            }else if(trgt.className == "judgeB"){
+              let contnu;
+              if(edited){
+                contnu = confirm("Changes you made may not be saved.");
+              }
+              if(!edited || contnu){
+                edited = 0;
+                for(let i=0;i<judgeButtons.length;i++){
+                  judgeButtons[i].className = "judgeB";
+                }
+                trgt.className = "judgeB selected";
+                selectedJudge = trgt.innerText;
+                makeWriteTable1();
+                write.innerHTML = "";
+                saveB.style.visibility="hidden";
+              }
+            }else if(trgt.innerText == "Save Changes" && edited){
+              save1();
             }
           }
         }
-      });
+      });/*
       document.body.addEventListener("keyup",function(event){
         let message = {
           u : ["ProgrammingTrials"],
@@ -510,11 +669,26 @@
             gradeData
           ]
         };
-        req.open("PUT", "https://api.jsonbin.io/b/5fae1ef9ea9b612e1c672795", true);
+        req.open("PUT", "https://api.jsonbin.io/b/"+source, true);
         req.setRequestHeader("Content-Type", "application/json");
-        req.setRequestHeader("secret-key", "$2b$10$veVVf2YF3g2KMM9cTA2KueBZjncRt7/j9TYAbl7SfqzNfKzTwCRku");
+        req.setRequestHeader("secret-key", code);
         req.send(JSON.stringify(message));
+      });*/
+      document.body.addEventListener("keydown",function(event){
+        let row = event.target.parentNode.children;
+        if(row[0].tagName.toLowerCase() == "td"){
+          edited = 1;
+        }
+        setTimeout(function(){
+          row[8].innerText = ((+de(row[3].innerText))+(+de(row[4].innerText))+(+de(row[5].innerText))+(+de(row[6].innerText))+(+de(row[7].innerText))) / 5;
+        }, 20);
       });
+      //popup
+      window.onbeforeunload = function() {
+        if(edited){
+          return "Changes you made may not be saved.";
+        }
+      }
     </script>
   </body>
 </html>
